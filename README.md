@@ -31,3 +31,50 @@
       val rdd = sc.parallelize(1 to 10)
       val sample1 = rdd.randomSplit(Array(1.0,5.0),1)
       从rdd中取出数据，将其变为两个rdd数组
+
+  3、sortBy
+  源码：  
+  def sortBy[K](
+      f: (T) => K,
+      ascending: Boolean = true,
+      numPartitions: Int = this.partitions.length)
+      (implicit ord: Ordering[K], ctag: ClassTag[K]): RDD[T] = withScope {......}
+  参数
+      f: (T) => K：取值函数，根据该值排序
+      ascending：排序方式，true：升序，false：降序
+  示例
+      val rdd = sc.parallelize(1 to 10)
+      rdd.sortBy(f=>f,true)
+      
+  4、intersection 
+  源码
+      def intersection(other: RDD[T]): RDD[T] = withScope {......}
+  求交集
+  
+  5、cartesian
+  源码
+      def cartesian[U: ClassTag](other: RDD[U]): RDD[(T, U)] = withScope {......}
+  笛卡尔积
+  
+  6、glom
+  源码
+      def glom(): RDD[Array[T]]
+      该函数是将RDD中每一个分区中类型为T的元素转换成Array[T]，这样每一个分区就只有一个数组元素。
+  示例
+      var rdd = sc.makeRDD(1 to 10,3)
+      rdd.partitions.size
+      res33: Int = 3  //该RDD有3个分区
+      rdd.glom().collect
+      Array[Array[Int]] = Array(Array(1, 2, 3), Array(4, 5, 6), Array(7, 8, 9, 10))
+      //glom将每个分区中的元素放到一个数组中，这样，结果就变成了3个数组
+  
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
