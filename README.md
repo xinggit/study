@@ -68,13 +68,59 @@
       Array[Array[Int]] = Array(Array(1, 2, 3), Array(4, 5, 6), Array(7, 8, 9, 10))
       //glom将每个分区中的元素放到一个数组中，这样，结果就变成了3个数组
   
-      
-      
-      
-      
-      
-      
-      
-      
+
+Spark自定义排序
+    源码
+    class CustomSort(val a: Int,val b: Int,val c: Int,val d: Int) extends Ordered[CustomSort] with Serializable {
+        override def compare(that: CustomSort): Int = {
+              println("start---->sortby")
+                if (a != that.a) {
+                  a - that.a
+                } else if (b != that.b) {
+                  that.b - b
+                } else if (c != that.c) {
+                  that.c - c
+                } else {
+                  that.d - d
+             }
+        }
+        override def toString = s"CustomSort($a, $b, $c, $d)"
+  }
+  一、自定义排序先继承Ordered这个类型，实现compare这个方法
+      val rdd = sc.textFile("D:/1111zx/hs_err_pid32514.log")
+      val c = rdd.map(f => {
+        val a = f.split("\t");
+        new CustomSort(a(0).toInt, a(1).toInt, a(2).toInt, a(3).toInt)
+      })
+      println("###################################")
+      println("###################################")
+      val a = c.sortBy(f=>f,false).take(6)
+      for(b <- a) {
+        println(b)
+      }
+      println("###################################")
+      println("###################################")
+  二、将数据包装成自定义的类，sortby这个函数将会自动根据类的compare方法来排序
+      
+     
+Spark自定义分区
+  一、先决条件：必须是key-value对的类型
+  二、自定义分区类，继承Partitioner类
+    源码
+      class CustomPartitioner extends Partitioner with Serializable {
+      override def numPartitions = 2
+
+      override def getPartition(key: Any): Int = {
+        key.asInstanceOf[Int] % numPartitions
+      }
+    }
+  三、调用分区类
+          val rdd = sc.textFile("D:/1111zx/hs_err_pid32514.log", 4)
+          val vs = rdd.map(f => {
+            val ays = f.split("\t");
+            (ays(0).toInt, ays(1).toInt)
+          }).partitionBy(new CustomPartitioner)
+    
+      
       
       
