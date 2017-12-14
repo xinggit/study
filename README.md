@@ -122,5 +122,16 @@ Spark自定义分区
           }).partitionBy(new CustomPartitioner)
     
       
-      
+  四、sql的用法
+   1、将两个不同的字段，放在一组
+    示例：  group by A.day,
+           A.CHNL_CD,
+           A.INVEST_TERM,
+           CASE WHEN PRODUCT_ID=10 THEN 3 ELSE A.PRODUCT_ID END
+        利用CASE WHEN 将产品ID等于10和等于3的放在一组
+   2、GROUPING SETS作为GROUP BY的子句，允许开发人员在GROUP BY语句后面指定多个统计选项，可以简单理解为多条group by语句通过union all把查询结果聚合     起来结合起来，下面是几个实例可以帮助我们了解
+   关键字1：WITH CUBE
+   关键字2：grouping sets
+   关键字3：ROLL UP
+      
       
