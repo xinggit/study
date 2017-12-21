@@ -134,42 +134,27 @@ Spark自定义分区
    关键字2：grouping sets
    关键字3：ROLL UP
       
-  五  maven打包idea项目，当存在多个目录的时候  
-  　　需要说明的是，如果一个maven项目中有多个子目录，每一个子目录中的pom.xml对应一个项目，它的作用范围只有这一个子目录下的。比如扫描配置文件，如果要让一个子目录下的pom.xml扫描另一个子目录下的配置文件，那是做不到的。在打jar包的时候，只运行当前的pom.xml文件。
- 
-　　当然也有其他的打包方法，比如使用spring-boot-maven-plugin插件在打Jar包时，会引入依赖包。
-　　它的pom.xml文件配置为：
-复制代码
-<build>
-    <plugins>
-        <plugin>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-        </plugin>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-                <source>1.8</source>
-                <target>1.8</target>
-            </configuration>
-        </plugin>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-            <configuration>
-                <archive>
-                    <manifest>
-                        <addClasspath>true</addClasspath>
-                        <useUniqueVersions>false</useUniqueVersions>
-                        <classpathPrefix>lib/</classpathPrefix>
-                        <mainClass>cn.mymaven.test.TestMain</mainClass>
-                    </manifest>
-                    <manifestEntries>
-                        <version>${project.version}</version>
-                    </manifestEntries>
-                </archive>
-            </configuration>
-        </plugin>
-    </plugins>
-</build>
+  五  scala + java项目编译
+命令：mvn clean scala:compile compile package
+原因maven默认只将java项目编译成class文件，所以需要先将scala:compile编译成class文件
+版本jdk1.8
+    scala 2.12.0
+pom文件
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.scala-tools</groupId>
+                <artifactId>maven-scala-plugin</artifactId>
+                <version>2.15.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
